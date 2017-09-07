@@ -89,7 +89,7 @@ def createIncident(incident)
 	#print respJson.to_json
 	#print response.body.to_json
 	if response.kind_of? Net::HTTPSuccess
-		return "Your ticket has been created, view it here: #{respJson['href'].strip(".json")}"
+		return "Your ticket has been created, view it here: " + respJson['href'].strip('.json')
 	else
 		return "Something went wrong: #{response.message}"
 	end
