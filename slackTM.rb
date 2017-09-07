@@ -21,7 +21,7 @@ post '/' do
 
 	ticket = {'incident':{}}
 
-	params[text].split(/[,=]/).each_slice(2) do |a, b|
+	params['text'].split(/[,=]/).each_slice(2) do |a, b|
     	ticket['incident'][a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
 	end
 
