@@ -24,9 +24,9 @@ post '/' do
 	textsplit = params['text'].split(/[,=]/)
 
 
-	if !textsplit.any? { |word|  'name'.include?(word)}
-		respond_message("You didn't give an Incident name, this is the minimum requirement to create a ticket.", params['response_url'])
-	end
+	#if !textsplit.any? { |word|  'name'.include?(word)}
+	#	respond_message("You didn't give an Incident name, this is the minimum requirement to create a ticket.", params['response_url'])
+	#end
 
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
     	ticket[a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
