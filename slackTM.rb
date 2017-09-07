@@ -41,7 +41,7 @@ post '/' do
 	end
 
 	incident = {'incident': ticket}
-	print incident
+	print incident.to_json
 
 
 	response = createIncident(incident)
