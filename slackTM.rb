@@ -23,6 +23,7 @@ post '/' do
 
 	if params['name'] == nil 
 		respond_message "You didn't give an Incident name, this is the minimum requirement to create a ticket."
+	end
 
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
     	ticket[a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
