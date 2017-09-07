@@ -87,11 +87,11 @@ def createIncident(incident)
 
 	response = http.request(preq)
 	respJson = JSON.parse(response.body).to_json
-	print respJson['href'].strip(".json")
+	print respJson['href']
 	#print respJson.to_json
 	#print response.body.to_json
 	if response.kind_of? Net::HTTPSuccess
-		return respJson['href'].strip(".json")
+		return respJson['href']
 	else
 		return "Something went wrong: #{response.message}"
 	end
