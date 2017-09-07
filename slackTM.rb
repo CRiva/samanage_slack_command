@@ -19,13 +19,15 @@ end
 
 post '/' do
 
-	ticket = {'incident':{}}
+	ticket = {}
 
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
-    	ticket['incident'][a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
+    	ticket[a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
 	end
 
-	response = createIncident ticket
+	incident = {'incident': ticket}
+
+	response = createIncident incident
 
 	respond_message response
 end
