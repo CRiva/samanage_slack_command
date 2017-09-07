@@ -22,7 +22,7 @@ post '/' do
 	ticket = {}
 
 	if params['name'] == nil 
-		respond_message "You didn't give an Incident name, this is the minimum requirement to create a ticket."
+		respond_message "You didn't give an Incident name, this is the minimum requirement to create a ticket." params['response_url']
 	end
 
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
@@ -41,12 +41,17 @@ post '/' do
 
 	response = createIncident incident
 
-	respond_message response 
+	respond_message response params['response_url']
 end
 
-def respond_message message
-  content_type :json
-  {:text => message, :response_type => 'in_channel'}.to_json
+def respond_message message url
+	uri = URI.parse(url)
+	http = Net::HTTP.new(uri.host, uri.port)
+	http.use_ssl = true
+	header = {'Content-Type': 'application/json'}
+	preq = Net::HTTP::Post.new(uri.request_uri, header)
+	preq.body = {:text => message, :response_type => 'in_channel'}.to_json
+	response = http.request(preq)
 end
 
 def createIncident(incident)
