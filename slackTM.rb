@@ -18,8 +18,16 @@ before do
 end
 
 post '/' do
-	print params
-	respond_message "You have successfully submitted a ticket"
+
+	ticket = {'incident':{}}
+
+	params[text].split(/[,=]/).each_slice(2) do |a, b|
+    	ticket['incident'][a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
+	end
+
+	response = createIncident ticket
+
+	respond_message response
 end
 
 def respond_message message
@@ -27,22 +35,23 @@ def respond_message message
   {:text => message}.to_json
 end
 
-#def getIncidents(params)
-#	uri = URI.parse(@conf['TM_API']['TMIncidentsURL']).tap do |uri|
-#		uri.query = URI.encode_www_form params
-#	end
-#	http = Net::HTTP.new(uri.host, uri.port)
-#	http.use_ssl = true
-#	header = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-#	preq = Net::HTTP::Get.new(uri.request_uri, header)
-#
+def createIncident(format)
+	uri = URI.parse(@conf['TM_API']['TMIncidentsURL']).tap do |uri|
+		uri.query = URI.encode_www_form format
+	end
+	http = Net::HTTP.new(uri.host, uri.port)
+	http.use_ssl = true
+	header = {'Accept': 'application/vnd.samanage.v2.1+json', 
+		      'Content-Type': 'application/json',
+		      'X-Samanage-Authorization': 'Bearer '+@conf['TM_API']['TMJWT']}
+	preq = Net::HTTP::Post.new(uri.request_uri, header)
+
 #	user = @conf['TM_API']['TMAdminUser']
 #	passwd = @conf['TM_API']['TMAdminPwd']
 #	preq.basic_auth(user, passwd)
-#	response = http.request(preq)
-	#print response.body+"\n"
-#	respJson = JSON.parse(response.body)
-#	print params.to_s+"\n"
-#	print respJson.length().to_s+"\n"
-#	return respJson.to_json
-#end
+	response = http.request(preq)
+	print response.body+"\n"
+	respJson = JSON.parse(response.body)
+	respJson.length().to_s+"\n"
+	return respJson.to_json['href']
+end
