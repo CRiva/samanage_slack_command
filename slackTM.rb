@@ -49,10 +49,16 @@ post '/' do
 	incident = {'incident': ticket}
 	print incident.to_json
 
-
 	response = createIncident(incident)
 
+	quickResponse("Your ticket is currently being processed, I will let you know the update.")
+
 	respond_message(response, params['response_url'])
+end
+
+def quickResponse(message)
+	content_type :json
+	{:text => message}.to_json
 end
 
 def respond_message(message, url)
@@ -81,10 +87,9 @@ def createIncident(incident)
 	preq.body = incident.to_json
 
 	response = http.request(preq)
+	respJson = JSON.parse(response.body)
 	if response.kind_of? Net::HTTPSuccess
-		respJson = JSON.parse(response.body)
-		readable = respJson.to_json
-		return readable['href'].strip(".json")
+		return respJson['href'].strip(".json")
 	else
 		return "Something went wrong: #{response.message}"
 	end
