@@ -87,6 +87,7 @@ def createIncident(incident)
 
 	response = http.request(preq)
 	respJson = JSON.parse(response.body).to_json
+	print respJson['href'].strip(".json")
 	#print respJson.to_json
 	#print response.body.to_json
 	if response.kind_of? Net::HTTPSuccess
