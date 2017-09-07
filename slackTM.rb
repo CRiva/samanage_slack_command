@@ -32,14 +32,14 @@ post '/' do
 		key = a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
 		value = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
 		if key == "requester"
-			ticket[key] = {'email' : value}
+			ticket[key] = {'email': value}
 		else
     		ticket[key] = value
     	end
 	end
 
 	if ticket['requester'] == nil
-		ticket['requester'] = {'email' : params['user_name']+"@westmont.edu"}
+		ticket['requester'] = {'email': params['user_name']+"@westmont.edu"}
 	end
 
 	if ticket['priority'] == nil
