@@ -19,6 +19,12 @@ end
 
 post '/' do
 	print params
+	respond_message "You have successfully submitted a ticket"
+end
+
+def respond_message message
+  content_type :json
+  {:text => message}.to_json
 end
 
 #def getIncidents(params)
