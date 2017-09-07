@@ -89,7 +89,7 @@ def createIncident(incident)
 	#print respJson.to_json
 	#print response.body.to_json
 	if response.kind_of? Net::HTTPSuccess
-		link = respJson['href'].tap{|s| s.slice!(".json")}
+		link = respJson['href'].tap{|s| s.slice!(".json")}.sub!("api.samanage.com", "support.westmont.edu")
 		return "Your ticket has been created, view it here: #{link}"
 	else
 		return "Something went wrong: #{response.message}"
