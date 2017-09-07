@@ -18,6 +18,7 @@ before do
 end
 
 post '/' do
+	respond_message("Your ticket is currently being processed, I will let you know the update.", params['response_url'])
 
 	ticket = {}
 
@@ -48,8 +49,6 @@ post '/' do
 
 	incident = {'incident': ticket}
 	print incident.to_json
-
-	quickResponse("Your ticket is currently being processed, I will let you know the update.")
 
 	response = createIncident(incident)
 	respond_message(response, params['response_url'])
