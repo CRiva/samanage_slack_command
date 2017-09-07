@@ -21,39 +21,44 @@ post '/' do
 
 	ticket = {}
 
+	if params['name'] == nil 
+		respond_message "You didn't give an Incident name, this is the minimum requirement to create a ticket."
+
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
     	ticket[a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")] = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
+	end
+
+	if ticket['requester'] == nil
+		ticket['requester'] = params['user_name']+"@westmont.edu"
+	end
+
+	if ticket['priority'] == nil
+		ticket['priority'] = "Medium"
 	end
 
 	incident = {'incident': ticket}
 
 	response = createIncident incident
 
-	respond_message response
+	respond_message response 
 end
 
 def respond_message message
   content_type :json
-  {:text => message}.to_json
+  {:text => message, :response_type => 'in_channel'}.to_json
 end
 
-def createIncident(format)
-	uri = URI.parse(@conf['TM_API']['TMIncidentsURL']).tap do |uri|
-		uri.query = URI.encode_www_form format
-	end
+def createIncident(incident)
+	uri = URI.parse(@conf['TM_API']['TMIncidentsURL'])
 	http = Net::HTTP.new(uri.host, uri.port)
 	http.use_ssl = true
 	header = {'Accept': 'application/vnd.samanage.v2.1+json', 
 		      'Content-Type': 'application/json',
 		      'X-Samanage-Authorization': 'Bearer '+@conf['TM_API']['TMJWT']}
 	preq = Net::HTTP::Post.new(uri.request_uri, header)
+	preq.body = incident.to_json
 
-#	user = @conf['TM_API']['TMAdminUser']
-#	passwd = @conf['TM_API']['TMAdminPwd']
-#	preq.basic_auth(user, passwd)
 	response = http.request(preq)
-	print response.body+"\n"
 	respJson = JSON.parse(response.body)
-	respJson.length().to_s+"\n"
-	return respJson.to_json['href']
+	return respJson['href'].strip(".json")
 end
