@@ -41,6 +41,8 @@ post '/' do
 	end
 
 	incident = {'incident': ticket}
+	print incident
+
 
 	response = createIncident(incident)
 
@@ -58,7 +60,7 @@ def respond_message(message, url)
 	if response.kind_of? Net::HTTPSuccess
 		print "Success in posting to Slack"
 	else
-		print "Something went wrong: #{response.message}"
+		print "Something went wrong in posting to slack: #{response.message}"
 	end
 end
 
