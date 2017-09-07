@@ -21,8 +21,11 @@ post '/' do
 
 	ticket = {}
 
-	if params['name'] == nil 
-		respond_message "You didn't give an Incident name, this is the minimum requirement to create a ticket." params['response_url']
+	textsplit = params['text'].split(/[,=]/)
+
+
+	if !textsplit.any? { |word|  'name'.include?(word)}
+		respond_message("You didn't give an Incident name, this is the minimum requirement to create a ticket.", params['response_url'])
 	end
 
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
@@ -39,9 +42,9 @@ post '/' do
 
 	incident = {'incident': ticket}
 
-	response = createIncident incident
+	response = createIncident(incident)
 
-	respond_message response params['response_url']
+	respond_message(response, params['response_url'])
 end
 
 def respond_message message url
