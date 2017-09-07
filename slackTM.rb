@@ -85,7 +85,7 @@ def createIncident(incident)
 	preq.body = incident.to_json
 
 	response = http.request(preq)
-	respJson = JSON.parse(response.body).to_json
+	respJson = JSON.parse(response.body).to_hash
 	print respJson['href']
 	#print respJson.to_json
 	#print response.body.to_json
