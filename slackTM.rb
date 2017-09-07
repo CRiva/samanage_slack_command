@@ -55,6 +55,11 @@ def respond_message(message, url)
 	preq = Net::HTTP::Post.new(uri.request_uri, header)
 	preq.body = {:text => message, :response_type => 'in_channel'}.to_json
 	response = http.request(preq)
+	if response.kind_of? Net::HTTPSuccess
+		print "Success in posting to Slack"
+	else
+		print "Something went wrong: #{response.message}"
+	end
 end
 
 def createIncident(incident)
@@ -68,6 +73,10 @@ def createIncident(incident)
 	preq.body = incident.to_json
 
 	response = http.request(preq)
-	respJson = JSON.parse(response.body)
-	return respJson['href'].strip(".json")
+	if response.kind_of? Net::HTTPSuccess
+		respJson = JSON.parse(response.body)
+		return respJson['href'].strip(".json")
+	else
+		return "Something went wrong: #{response.message}"
+	end
 end
