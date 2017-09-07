@@ -47,7 +47,7 @@ post '/' do
 	respond_message(response, params['response_url'])
 end
 
-def respond_message message url
+def respond_message(message, url)
 	uri = URI.parse(url)
 	http = Net::HTTP.new(uri.host, uri.port)
 	http.use_ssl = true
