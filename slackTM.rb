@@ -32,8 +32,9 @@ post '/' do
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
 		key = a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
 		value = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
-		if key == "requester"
+		if key == "requester" or key == "assignee"
 			ticket[key] = {'email': value}
+		}
 		else
     		ticket[key] = value
     	end
