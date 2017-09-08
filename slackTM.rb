@@ -34,7 +34,6 @@ post '/' do
 		value = b.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
 		if (key == "requester" or key == "assignee")
 			ticket[key] = {'email': value}
-		}
 		else
     		ticket[key] = value
     	end
