@@ -5,7 +5,7 @@ require 'json'
 require 'inifile'
 
 @conf = IniFile.load('config.ini')
-incident = {"incident":{"name": "testing jwt api","requester":{"email": @conf['TM_API']['email']}, "priority": "LOW"}}
+incident = {"incident":{"name": "testing jwt api","requester":{"email": @conf['TM_API']['admin_email']}, "priority": "LOW"}}
 
 
 def createIncident(incident)
