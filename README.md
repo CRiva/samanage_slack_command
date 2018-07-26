@@ -1,4 +1,4 @@
-#Samanage Slack Slash Command
+# Samanage Slack Slash Command
 
 A simple sinatra application that allows slack to create a new support ticket using a slash command
 
