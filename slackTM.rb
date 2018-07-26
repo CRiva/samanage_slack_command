@@ -6,13 +6,6 @@ require 'uri'
 require 'json'
 require 'inifile'
 
-#curl -H "X-Samanage-Authorization: Bearer <token>" -d 
-#'{"incident":{"name":"testing jwt api","requester":{"email":"criva@westmont.edu"}, "priority":"LOW"}}' 
-#-H 'Accept: application/vnd.samanage.v2.1+json' 
-#-H 'Content-Type:application/json' 
-#-X POST https://api.samanage.com/incidents.json
-
-
 before do
 	@conf = IniFile.load('config.ini')
 end
@@ -23,11 +16,6 @@ post '/' do
 	ticket = {}
 
 	textsplit = params['text'].split(/[,=]/)
-
-
-	#if !textsplit.any? { |word|  'name'.include?(word)}
-	#	respond_message("You didn't give an Incident name, this is the minimum requirement to create a ticket.", params['response_url'])
-	#end
 
 	params['text'].split(/[,=]/).each_slice(2) do |a, b|
 		key = a.to_s.sub(/^[\s'"]/, "").sub(/[\s'"]$/, "")
@@ -40,7 +28,7 @@ post '/' do
 	end
 
 	if ticket['requester'] == nil
-		ticket['requester'] = {'email': params['user_name']+"@westmont.edu"}
+		ticket['requester'] = {'email': params['user_name']+"@"+@conf['TM_API']['domain']}
 	end
 
 	if ticket['priority'] == nil
@@ -86,10 +74,8 @@ def createIncident(incident)
 
 	response = http.request(preq)
 	respJson = JSON.parse(response.body).to_hash
-	#print respJson.to_json
-	#print response.body.to_json
 	if response.kind_of? Net::HTTPSuccess
-		link = respJson['href'].tap{|s| s.slice!(".json")}.sub!("api.samanage.com", "support.westmont.edu")
+		link = respJson['href'].tap{|s| s.slice!(".json")}.sub!("api.samanage.com", @conf['TM_API']['support_site'])
 		return "Your ticket has been created, view it here: #{link}"
 	else
 		return "Something went wrong: #{response.message}"
